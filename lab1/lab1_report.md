@@ -10,11 +10,21 @@
 Платформа OpenStack имеет набор интерфейсов для взаимодействия c системой со стороны пользователя. В данной работе рассмотрен command line interface (CLI) и модуль Horizon. Рассмотрены возможности авторизации в системе, создания проектов и пользователей.
 ## Ход работы
 ### 1.Создаем ВМ в VirtualBox на базе образа Alma Linux3
-Установлен VirtualBox, ВМ создана и сконфигурирована на 4 GB ОЗУ, ЦПУ 3 диск 22 GB,настроена сеть NAT,запущен процесс установки, записан IP адрес ВМ,настроен проброс портов
+Установлен VirtualBox, ВМ создана и сконфигурирована на 4 GB ОЗУ, ЦПУ 3 диск 22 GB,настроена сеть NAT,запущен процесс установки.
+Записан IP адрес ВМ:
 
-![VM](pictures/1.1.jpeg)
+![VM](pictures/1.jpeg)
+
+Настроен проброс портов:
+
+![ports](pictures/1.1.jpeg)
 
 ### 2.Подключаемся к ВМ по SSH (по адресу 127.0.0.1 порт 2222)
+
+Результат:
+
+![ssh](pictures/2.jpeg)
+
 ### 3.Устанавливаем git: 
 ```
 dnf install git -y
@@ -27,20 +37,38 @@ git clone https://gitlab.com/itmo_samon/openstack_lab.git
 ```
 ./prepare.sh
 ```
+Результат:
+
+![prepare.sh](pictures/5.jpeg)
+
 ### 6.Изучаем скрипт config.sh
 Выполняем
 ```
 ./config.sh
 ```
+Результат:
+
+![config.sh](pictures/6.jpeg)
+
 ### 7.Устанавливаем OpenStack
 ```
 packstack --answer-file=answer.cfg
 ```
+![OpenStack](pictures/7.jpeg)
+
+Успешное завершение установки:
+
+![OpenStack2](pictures/7.1.jpeg)
+
 ### 8.Смотрим на сгенерированные данные для входа (логи,пароль)
 ```
 cat ~/keystonerc_admin
 ```
-### 9.Передаем данные для входа попали в переменные среды
+Результат:
+
+![logs](pictures/8.jpeg)
+
+### 9.Передаем данные для входа в переменные среды
 ```
 source ~/keystonerc_admin
 ```
@@ -48,6 +76,10 @@ source ~/keystonerc_admin
 ```
 openstack endpoint list
 ```
+Результат:
+
+![sourse](pictures/910.jpeg)
+
 ### 11.Изучаем вывод
 ```
 openstack user list
@@ -56,21 +88,41 @@ openstack user list
 ```
 openstack project list
 ```
+
+![ulpl](pictures/1112.jpeg)
+
 ### 13. Выполняем команду
 ```
 openstack project create --domain default --description "Demo Project" demo
 ```
+![pc](pictures/13.jpeg)
+
 ### 14.Изучаем вывод
 ```
 openstack project list
 ```
+![pl](pictures/14.jpeg)
+
 ### 15.Подключаеся к веб-панели (Horizon) через браузер 
 Переходим на [http://localhost:8080](http://localhost:8080)  и вводим данные для входа из файла
 ```
 keystonerc_admin
 ```
 ### 16.Создаем проект и пользователя проекта в интерфейсе Horizon (меню слева, Администрирование)
+Результат:
+
+![project](pictures/16.jpeg)
 
 ### 17.Добавляем созданному пользователю роль в проекте (_member_)
+Результат:
+
+![member](pictures/17.jpeg)
+
+Все пользователи проекта:
+
+![users](pictures/17.1.jpeg)
 
 ### 18.Выходим из системы и авторизоваемся под созданным пользователем
+Результат:
+
+![newuser](pictures/18.jpeg)
