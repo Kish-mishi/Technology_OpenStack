@@ -143,7 +143,7 @@ openstack volume create --sourse my_disk --size 2 --bootable my_coppied_disk
 - флейвор: созданный ранее 
 - сеть: новосозданная приватная
 ```
-openstack server create --flavor my_tiny_flavor --image my_coppied_disk --nic net-id=our_private_nrtwork my_new_vm
+openstack server create --flavor my_tiny_flavor --image my_coppied_disk --nic net-id=our_private_network my_new_vm
 ```
 ![sc](pictures/task3.jpeg)
 ### 4.Через Horizon проверяем, что все завелось
