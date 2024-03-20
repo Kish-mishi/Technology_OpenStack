@@ -90,10 +90,71 @@
 
 ![horizon_created_ВМ](pictures/8.jpg)
 
+## Задание
+### Повторяем операцию по созданию ВМ  через API, но с помощью “обертки” (SDK): Python.
+Пишем скрипт, в котором воспроизводим авторизацию и создание ВМ:
+```
+from keystoneauth1 import identity
+from keystoneauth1 import session
+from keystoneclient.v3 import client as ksclient
+from novaclient import client
+
+auth_url = 'http://127.0.0.1:5000/v3'
+project_name = 'admin'
+username = 'admin'
+password = 'f19a0f66d91040df'
+user_domain_id = 'default'
+project_domain_id = 'default'
+
+auth = identity.Password(auth_url=auth_url,
+                         username=username,
+                         password=password,
+                         project_name=project_name,
+                         user_domain_id=user_domain_id,
+                         project_domain_id=project_domain_id)
+
+sess = session.Session(auth=auth)
+
+keystone = ksclient.Client(session=sess)
+
+token = sess.get_token()
+
+print(token)
+
+# Инициализация клиента Nova
+nova = client.Client('2.1', session=sess, endpoint_type='publicURL',
+                     endpoint_override='http://127.0.0.1:8774/v2.1', )
+
+# Создание новой виртуальной машины
+server = nova.servers.create(
+    name="python_VM",
+    flavor="11841517-b49f-4b52-8a0d-7cead28f2784",
+    image="e1bc58b6-877f-41c7-87de-f8483af016e6",
+    nics=[{"net-id": "1cc6769f-870f-4881-a69e-cb3846073bab"}],
+    security_groups=["default"])
+
+print("VM создана. ID:", server.id)
+
+```
+![python1](pictures/9.jpeg)
+
+![python2](pictures/10.jpeg)
+
+Смотрим результат в Horizon:
+
+![Hor1](pictures/11.jpeg)
+
+![Hor2](pictures/12.jpeg)
+
 ## Вопросы:
 ### 1.Какие протоколы тунеллирования использует Neutron?
+Neutron использует следующие протоколы туннелирования:   
+1.GRE (Generic Routing Encapsulation) - обеспечивает механизм инкапсуляции для передачи пакетов между удаленными сетями.  
+2.VXLAN (Virtual Extensible LAN) - позволяет создавать виртуальные сети на основе технологии Ethernet.  
+3.Geneve - новый протокол туннелирования, который предоставляет возможность передачи метаданных и обеспечивает более гибкие опции конфигурации.
 
 ### 2.Можно ли заменить Cinder, например, CEPH-ом? Для чего если да, почему если нет?
-
+Да, можно заменить Cinder на Ceph для хранения блочных данных. Ceph - распределенное хранилище данных с возможностью масштабирования и различными типами хранения (блочное, файловое, объектное),Cinder - блочное хранилище для виртуальных машин. Ceph более универсальный и отказоустойчивый, а Cinder ориентирован на работу с виртуальными машинами.
+Ceph предоставляет более высокую доступность, отказоустойчивость и масштабируемость (Обычно как раз таки Cinder и заменяют на Ceph по этим причинам).
 
 
